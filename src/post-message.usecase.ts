@@ -12,7 +12,7 @@ export type PostMessageCommand = {
 }
 
 export interface MessageRepository {
-  save(message: Message): void;
+  save(message: Message): Promise<void>;
 }
 
 export interface DateProvider {
