@@ -29,14 +29,14 @@ export class PostMessageUsecase {
     private readonly dateProvider: DateProvider,
   ) {}
 
-  handle(postMessageCommand: PostMessageCommand) {
+  async handle(postMessageCommand: PostMessageCommand) {
     if (postMessageCommand.text.length > 280) {
       throw new MessageTooLongError();
     }
     if (postMessageCommand.text.trim().length === 0) {
       throw new EmptyMessageError();
     }
-    this.messageRepository.save({
+    await this.messageRepository.save({
       id: postMessageCommand.id,
       text: postMessageCommand.text,
       author: postMessageCommand.author,
