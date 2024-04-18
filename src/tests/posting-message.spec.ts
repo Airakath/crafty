@@ -1,11 +1,11 @@
 import {
   DateProvider, EmptyMessageError,
-  Message,
   MessageTooLongError,
   PostMessageCommand,
   PostMessageUsecase
 } from "../post-message.usecase";
 import {InMemoryMessageRepository} from "../message-inmemory.repository";
+import {Message} from "../message";
 
 describe('Feature Posting a message', () => {
   let fixture: Fixture;
@@ -100,7 +100,7 @@ const createFixture = () => {
       }
     },
     thenPostedMessageShouldBe(expectedMessage: Message) {
-      expect(expectedMessage).toEqual(mesaageRepository.message);
+      expect(expectedMessage).toEqual(mesaageRepository.getMessageById(expectedMessage.id));
     },
     thenErrorShouldBe(expectedErrorClass: new () => Error) {
       expect(throwError).toBeInstanceOf(expectedErrorClass);

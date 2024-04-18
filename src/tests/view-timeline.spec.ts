@@ -1,5 +1,6 @@
-import {Message} from "../post-message.usecase";
 import {InMemoryMessageRepository} from "../message-inmemory.repository";
+import {ViewTimelineUsecase} from "../view-timeline.usecase";
+import {Message} from "../message";
 
 describe("Feature: Viewing a personal timeline", () => {
   let fixture: Fixture;
@@ -59,10 +60,15 @@ const createFixture = () => {
     publishedTime: string
   }[];
   const messageRepository = new InMemoryMessageRepository();
+  const viewTimelineUseCase = new ViewTimelineUsecase(messageRepository);
   return {
-    givenTheFollowingMessagesExist(messages: Message[]) {},
+    givenTheFollowingMessagesExist(messages: Message[]) {
+      messageRepository.givenExistingMessages(messages);
+    },
     giveNowIs(now: Date) {},
-    async whenUserseesTheTimelineOf(user: string) {},
+    async whenUserseesTheTimelineOf(user: string) {
+      timeline = await viewTimelineUseCase.handle({ user });
+    },
     thenUserShouldSee(expectedTimeline: {author: string, text: string, publishedTime: string}[]) {
       expect(timeline).toEqual(expectedTimeline);
     }
