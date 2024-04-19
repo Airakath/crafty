@@ -1,6 +1,7 @@
 import {InMemoryMessageRepository} from "../message-inmemory.repository";
 import {ViewTimelineUsecase} from "../view-timeline.usecase";
 import {Message} from "../message";
+import {StubDateProvider} from "../stub-date-provider";
 
 describe("Feature: Viewing a personal timeline", () => {
   let fixture: Fixture;
@@ -10,13 +11,13 @@ describe("Feature: Viewing a personal timeline", () => {
   });
 
   describe("Rule: Messages are shown in reverse chronological order", () => {
-    test("Alice can view the 2 messages she published in her timeline", async () => {
+    test("Alice can view the 3 messages she published in her timeline", async () => {
       fixture.givenTheFollowingMessagesExist([
         {
           author: "Alice",
           text: "My first message",
           id: "message-1",
-          publishedAt: new Date("2023-02-07T16:28:00Z"),
+          publishedAt: new Date("2023-02-07T16:28:02Z"),
         },
         {
           author: "Bob",
@@ -30,6 +31,12 @@ describe("Feature: Viewing a personal timeline", () => {
           id: "message-3",
           publishedAt: new Date("2023-02-07T16:34:00Z"),
         },
+        {
+          author: "Alice",
+          text: "My last message",
+          id: "message-4",
+          publishedAt: new Date("2023-02-07T16:34:30Z"),
+        },
       ]);
 
       fixture.giveNowIs(new Date("2023-02-07T16:35:00Z"));
@@ -37,6 +44,11 @@ describe("Feature: Viewing a personal timeline", () => {
       await fixture.whenUserseesTheTimelineOf("Alice");
 
       fixture.thenUserShouldSee([
+        {
+          author: "Alice",
+          text: "My last message",
+          publishedTime: "less then a minute ago",
+        },
         {
           author: "Alice",
           text: "My second message",
@@ -51,6 +63,7 @@ describe("Feature: Viewing a personal timeline", () => {
 
     });
   });
+
 });
 
 const createFixture = () => {
@@ -60,12 +73,15 @@ const createFixture = () => {
     publishedTime: string
   }[];
   const messageRepository = new InMemoryMessageRepository();
-  const viewTimelineUseCase = new ViewTimelineUsecase(messageRepository);
+  const dateProvider = new StubDateProvider();
+  const viewTimelineUseCase = new ViewTimelineUsecase(messageRepository, dateProvider);
   return {
     givenTheFollowingMessagesExist(messages: Message[]) {
       messageRepository.givenExistingMessages(messages);
     },
-    giveNowIs(now: Date) {},
+    giveNowIs(now: Date) {
+      dateProvider.now = now;
+    },
     async whenUserseesTheTimelineOf(user: string) {
       timeline = await viewTimelineUseCase.handle({ user });
     },

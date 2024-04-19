@@ -1,11 +1,12 @@
 import {
-  DateProvider, EmptyMessageError,
+  EmptyMessageError,
   MessageTooLongError,
   PostMessageCommand,
   PostMessageUsecase
 } from "../post-message.usecase";
 import {InMemoryMessageRepository} from "../message-inmemory.repository";
 import {Message} from "../message";
+import {StubDateProvider} from "../stub-date-provider";
 
 describe('Feature Posting a message', () => {
   let fixture: Fixture;
@@ -75,12 +76,6 @@ describe('Feature Posting a message', () => {
   });
 });
 
-class StubDateProvider implements DateProvider {
-  now!: Date;
-  getNow(): Date {
-    return this.now;
-  }
-}
 
 const createFixture = () => {
   const dateProvider = new StubDateProvider();
