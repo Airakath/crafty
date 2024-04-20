@@ -39,7 +39,7 @@ describe("Feature: Viewing a personal timeline", () => {
 
       fixture.givenNowIs(new Date("2023-02-07T16:35:00Z"));
 
-      await fixture.whenUserseesTheTimelineOf("Alice");
+      await fixture.whenUserSeesTheTimelineOf("Alice");
 
       fixture.thenUserShouldSee([
         {

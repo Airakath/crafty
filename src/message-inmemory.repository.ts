@@ -21,8 +21,19 @@ export class InMemoryMessageRepository implements MessageRepository {
 
   getAllOfUser(user: string): Promise<Message[]> {
     return Promise.resolve(
-      [...this.messages.values()].filter((msg) => msg.author === user)
+      [...this.messages.values()]
+        .filter((msg) => msg.author === user)
+        .map((msg) => ({
+          id: msg.id,
+          author: msg.author,
+          text: msg.text,
+          publishedAt: msg.publishedAt,
+        }))
     );
+  }
+
+  getById(messageId: string): Promise<Message> {
+    return Promise.resolve(this.getMessageById(messageId));
   }
 
   private _save(msg: Message) {
