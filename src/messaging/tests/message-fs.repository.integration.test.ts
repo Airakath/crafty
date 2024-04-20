@@ -1,7 +1,7 @@
 import * as path from "node:path";
 import * as fs from "node:fs";
 
-import {FileSystemMessageRepository} from "../message-fs.repository";
+import {FileSystemMessageRepository} from "../infrastructure/persistance/file/message-fs.repository";
 import {messageBuilder} from "./message.builder";
 
 const testMessagesPath = path.join(__dirname, 'messages-test.json')

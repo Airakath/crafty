@@ -1,9 +1,9 @@
-import {StubDateProvider} from "../stub-date-provider";
-import {InMemoryMessageRepository} from "../message-inmemory.repository";
-import {PostMessageCommand, PostMessageUsecase} from "../post-message.usecase";
-import {Message} from "../message";
-import {ViewTimelineUsecase} from "../view-timeline.usecase";
-import {EditMessageCommand, EditMessageUsecase} from "../edit-message.usecase";
+import {StubDateProvider} from "../infrastructure/stub-date-provider";
+import {InMemoryMessageRepository} from "../infrastructure/persistance/memory/message-inmemory.repository";
+import {PostMessageCommand, PostMessageUsecase} from "../application/usecase/post-message.usecase";
+import {ViewTimelineUsecase} from "../application/usecase/view-timeline.usecase";
+import {EditMessageCommand, EditMessageUsecase} from "../application/usecase/edit-message.usecase";
+import {MessageEntity} from "../domain/entities/message.entity";
 
 export const createMessagingFixture = () => {
   let timeline: {
@@ -20,7 +20,7 @@ export const createMessagingFixture = () => {
   let throwError: Error;
 
   return {
-    givenTheFollowingMessagesExist(messages: Message[]) {
+    givenTheFollowingMessagesExist(messages: MessageEntity[]) {
       messageRepository.givenExistingMessages(messages);
     },
     givenNowIs(now: Date) {
@@ -43,7 +43,7 @@ export const createMessagingFixture = () => {
     async whenUserSeesTheTimelineOf(user: string) {
       timeline = await viewTimelineUseCase.handle({ user });
     },
-    async thenMessageShouldBe(expectedMessage: Message) {
+    async thenMessageShouldBe(expectedMessage: MessageEntity) {
       const message = await messageRepository.getById(expectedMessage.id);
       expect(message).toEqual(expectedMessage);
     },

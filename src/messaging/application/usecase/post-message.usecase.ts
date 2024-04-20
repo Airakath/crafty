@@ -1,14 +1,11 @@
-import {MessageRepository} from "./message.repository";
-import {Message} from "./message";
+import {MessageRepository} from "../../domain/ports/output/message.repository";
+import {MessageEntity} from "../../domain/entities/message.entity";
+import {DateProvider} from "../date-provider";
 
 export type PostMessageCommand = {
   id: string;
   text: string;
   author: string;
-}
-
-export interface DateProvider {
-  getNow(): Date;
 }
 
 export class PostMessageUsecase {
@@ -20,7 +17,7 @@ export class PostMessageUsecase {
   async handle(postMessageCommand: PostMessageCommand) {
 
 
-    await this.messageRepository.save(Message.fromData({
+    await this.messageRepository.save(MessageEntity.fromData({
       id: postMessageCommand.id,
       text: postMessageCommand.text,
       author: postMessageCommand.author,

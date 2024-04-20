@@ -1,4 +1,4 @@
-import {Message} from "../message";
+import {MessageEntity} from "../domain/entities/message.entity";
 
 export const messageBuilder = ({
   id = "message-id",
@@ -38,8 +38,8 @@ export const messageBuilder = ({
         publishedAt: _publishedAt,
       });
     },
-    build(): Message {
-      return Message.fromData({
+    build(): MessageEntity {
+      return MessageEntity.fromData({
         id: props.id,
         author: props.author,
         text:props.text,

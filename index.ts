@@ -1,15 +1,11 @@
 #!/usr/bin/env node
-import {DateProvider, PostMessageCommand, PostMessageUsecase} from "./src/post-message.usecase";
-import { Command } from "commander";
-import {FileSystemMessageRepository} from "./src/message-fs.repository";
-import {ViewTimelineUsecase} from "./src/view-timeline.usecase";
-import {EditMessageCommand, EditMessageUsecase} from "./src/edit-message.usecase";
+import {PostMessageCommand, PostMessageUsecase} from "./src/messaging/application/usecase/post-message.usecase";
+import {Command} from "commander";
+import {FileSystemMessageRepository} from "./src/messaging/infrastructure/persistance/file/message-fs.repository";
+import {ViewTimelineUsecase} from "./src/messaging/application/usecase/view-timeline.usecase";
+import {EditMessageCommand, EditMessageUsecase} from "./src/messaging/application/usecase/edit-message.usecase";
+import {RealDateProvider} from "./src/messaging/infrastructure/real-date-provider";
 
-class RealDateProvider implements DateProvider{
-  getNow(): Date {
-    return new Date();
-  }
-}
 
 const messageRepository = new FileSystemMessageRepository();
 const dateProvider = new RealDateProvider();
@@ -34,7 +30,7 @@ program
       }
       try {
         await postMessageUsecase.handle(postMessageCommand);
-        console.log("Message posted");
+        console.log("MessageEntity posted");
         //console.table([messageRepository.message]);
       } catch (err) {
         console.error(err);
@@ -51,7 +47,7 @@ program
       }
       try {
         await editMessageUsecase.handle(editMessageCommand);
-        console.log("Message edited");
+        console.log("MessageEntity edited");
       } catch (err) {
         console.error(err);
       }

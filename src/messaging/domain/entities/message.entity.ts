@@ -1,7 +1,7 @@
 export class MessageTooLongError extends Error {}
 export class EmptyMessageError extends Error {}
 
-export class Message {
+export class MessageEntity {
   constructor(
     private readonly _id: string,
     private readonly _author: string,
@@ -38,8 +38,8 @@ export class Message {
     }
   }
 
-  static fromData(data: Message['data']) {
-    return new Message(
+  static fromData(data: MessageEntity['data']) {
+    return new MessageEntity(
       data.id,
       data.author,
       MessageText.of(data.text),
