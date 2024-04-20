@@ -1,9 +1,6 @@
-import {
-  EmptyMessageError,
-  MessageTooLongError,
-} from "../post-message.usecase";
 import {createMessagingFixture, MessagingFixture} from "./messaging.fixture";
 import {messageBuilder} from "./message.builder";
+import {EmptyMessageError, MessageTooLongError} from "../message";
 
 describe('Feature Posting a message', () => {
   let fixture: MessagingFixture;
