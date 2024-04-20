@@ -22,7 +22,7 @@ export class ViewTimelineUsecase {
 
     return messageOfUser.map(msg => ({
       author: msg.author,
-      text:  msg.text.value,
+      text:  msg.text,
       publishedTime: this.publicationIme(msg.publishedAt)
     }));
   }

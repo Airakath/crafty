@@ -1,7 +1,7 @@
 import * as path from "node:path";
 import * as fs from "node:fs";
 import {MessageRepository} from "./message.repository";
-import {Message, MessageText} from "./message";
+import {Message} from "./message";
 
 export class FileSystemMessageRepository implements MessageRepository {
 
@@ -20,12 +20,7 @@ export class FileSystemMessageRepository implements MessageRepository {
 
      return fs.promises.writeFile(
        this.messagePath,
-       JSON.stringify(messages.map((msg) => ({
-         id: msg.id,
-         author: msg.author,
-         text: msg.text.value,
-         publishedAt: msg.publishedAt.toISOString(),
-       }))),
+       JSON.stringify(messages.map((msg) => (msg.data))),
      );
   }
 
@@ -44,10 +39,10 @@ export class FileSystemMessageRepository implements MessageRepository {
        publishedAt: string;
      }[];
 
-     return messages.map(msg => ({
+     return messages.map(msg => Message.fromData({
        id: msg.id,
        author: msg.author,
-       text: MessageText.of(msg.text),
+       text: msg.text,
        publishedAt: new Date(msg.publishedAt),
      }));
   }
