@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import {PostMessageCommand, PostMessageUsecase} from "./src/messaging/application/usecase/post-message.usecase";
+import {PostMessageCommand, PostMessageUsecase} from "./src/messaging/application/usecases/post-message.usecase";
 import {Command} from "commander";
 import {FileSystemMessageRepository} from "./src/messaging/infrastructure/persistance/file/message-fs.repository";
-import {ViewTimelineUsecase} from "./src/messaging/application/usecase/view-timeline.usecase";
-import {EditMessageCommand, EditMessageUsecase} from "./src/messaging/application/usecase/edit-message.usecase";
+import {ViewTimelineUsecase} from "./src/messaging/application/usecases/view-timeline.usecase";
+import {EditMessageCommand, EditMessageUsecase} from "./src/messaging/application/usecases/edit-message.usecase";
 import {RealDateProvider} from "./src/messaging/infrastructure/real-date-provider";
 
 
