@@ -1,6 +1,6 @@
 import {FolloweeEntity} from "../domain/entities/followee.entity";
 import {FolloweeMemoryRepositoryAdapter} from "../infrastructure/persistance/memory/followee-memory-repository.adapter";
-import {FollowUserUsecase} from "../application/usecases/follow-user.usecase";
+import {FollowUserCommand, FollowUserUsecase} from "../application/usecases/follow-user.usecase";
 
 
 export const createFollowFixture = () => {
@@ -11,12 +11,12 @@ export const createFollowFixture = () => {
     givenUserFollower({ user, followees }: { user: string, followees: string[]}){
       followeeRepository.givenExistingFollowees(followees.map((followee) => new FolloweeEntity(user, followee)));
     },
-    async whenUserFollows({ user, userToFollow}: { user: string, userToFollow: string}){
-
+    async whenUserFollows(followUserCommand: FollowUserCommand){
+      await followUserUsecase.handle(followUserCommand);
     },
-    async thenUserFollows(expectedFollow: FolloweeEntity) {
-      const follow = await followeeRepository.getFollowByUser(expectedFollow.user);
-      expect(follow).toEqual(expectedFollow);
+    async thenUserFollowsAre(userFollowees: { user: string, followees: string[] }) {
+      const actualFollowees = await followeeRepository.getFolloweesOf(userFollowees.user);
+      expect(actualFollowees).toEqual(userFollowees.followees);
     },
   };
 }

@@ -1,4 +1,5 @@
 import {createFollowFixture, Fixture} from "./follow.fixture";
+import {FollowUserCommand} from "../application/usecases/follow-user.usecase";
 
 describe('Feature: Following a user', () => {
   let fixture: Fixture;
@@ -15,12 +16,12 @@ describe('Feature: Following a user', () => {
 
     await fixture.whenUserFollows({
       user: 'Alice',
-      userToFollow: 'Bob',
+      userTofollow: 'Bob',
     });
 
-    await fixture.thenUserFollows({
+    await fixture.thenUserFollowsAre({
       user: 'Alice',
-      followees: ['Charlie, Bob'],
+      followees: ['Charlie', 'Bob'],
     })
   });
 });

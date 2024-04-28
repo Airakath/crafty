@@ -23,4 +23,8 @@ export class FolloweeMemoryRepositoryAdapter implements FolloweeRepository {
     existingFollowees.push(followee.followee);
     this.followeesByUser.set(followee.user, existingFollowees);
   }
+
+  getFolloweesOf(user: string): string[] {
+    return this.followeesByUser.get(user) ?? [];
+  }
 }
