@@ -1,15 +1,14 @@
-import {createFollowFixture, Fixture} from "./follow.fixture";
-import {FollowUserCommand} from "../application/usecases/follow-user.usecase";
+import {createFollowingFixture, FollowingFixture} from "./following.fixture";
 
 describe('Feature: Following a user', () => {
-  let fixture: Fixture;
+  let fixture: FollowingFixture;
 
   beforeEach(() => {
-    fixture = createFollowFixture();
+    fixture = createFollowingFixture();
   });
 
   test('Alice can follow Bob', async () => {
-    fixture.givenUserFollower({
+    fixture.givenUserFollowees({
       user: 'Alice',
       followees: ['Charlie'],
     });

@@ -3,12 +3,12 @@ import {FolloweeMemoryRepositoryAdapter} from "../infrastructure/persistance/mem
 import {FollowUserCommand, FollowUserUsecase} from "../application/usecases/follow-user.usecase";
 
 
-export const createFollowFixture = () => {
+export const createFollowingFixture = () => {
   const followeeRepository = new FolloweeMemoryRepositoryAdapter()
   const followUserUsecase = new FollowUserUsecase(followeeRepository);
 
   return {
-    givenUserFollower({ user, followees }: { user: string, followees: string[]}){
+    givenUserFollowees({ user, followees }: { user: string, followees: string[]}){
       followeeRepository.givenExistingFollowees(followees.map((followee) => new FolloweeEntity(user, followee)));
     },
     async whenUserFollows(followUserCommand: FollowUserCommand){
@@ -18,7 +18,8 @@ export const createFollowFixture = () => {
       const actualFollowees = await followeeRepository.getFolloweesOf(userFollowees.user);
       expect(actualFollowees).toEqual(userFollowees.followees);
     },
+    followeeRepository,
   };
 }
 
-export type Fixture = ReturnType<typeof createFollowFixture>;
+export type FollowingFixture = ReturnType<typeof createFollowingFixture>;
