@@ -23,7 +23,7 @@ describe('Feature: Viewing a wall', () => {
 
   describe("Rule All the message freom the user and her followeees should appear in reverse chronological order", () => {
     test("Charlie has subscribed to Alice's, timelines, and thus can view an aggregated list of all subscription",async () => {
-
+      fixture.givenNowIs(new Date("2023-02-09T15:15:30.000Z"));
       messagingFixture.givenTheFollowingMessagesExist([
         messageBuilder()
           .withId('m1')
@@ -84,14 +84,14 @@ const  createFixture = ({
     dateProvider
   );
   return {
-    givenNowIS(now: Date) {
+    givenNowIs(now: Date) {
       dateProvider.now = now;
     },
     async whenUserSeesTheWallOf(user: string) {
       wall = await viewWallUsecase.handle({user});
     },
-    thenUserShouldSee(wallexpectedWall: { author: string, text: string, publicationTime: string}[]) {
-      expect(wall).toEqual(wallexpectedWall);
+    thenUserShouldSee(expectedWall: { author: string, text: string, publicationTime: string}[]) {
+      expect(wall).toEqual(expectedWall);
     }
   }
 }
