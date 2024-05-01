@@ -1,10 +1,7 @@
-import {createMessagingFixture, MessagingFixture} from "../../messaging/tests/messaging.fixture";
-import {messageBuilder} from "../../messaging/tests/message.builder";
+import {createMessagingFixture, MessagingFixture} from "../../../../messaging/tests/application/usecases/messaging.fixture";
+import {messageBuilder} from "../../../../messaging/tests/message.builder";
 import {createFollowingFixture, FollowingFixture} from "./following.fixture";
-import {StubDateProvider} from "../../messaging/infrastructure/stub-date-provider";
-import {ViewWallUsecase} from "../application/usecases/view-wall.usecase";
-import {MessageRepository} from "../../messaging/domain/ports/output/message.repository";
-import {FolloweeRepository} from "../domain/ports/output/followeeRepository";
+import { createWallFixture, Fixture } from './wall.fixture';
 
 describe('Feature: Viewing a wall', () => {
 
@@ -15,7 +12,7 @@ describe('Feature: Viewing a wall', () => {
   beforeEach(() => {
     messagingFixture = createMessagingFixture();
     followingFixture = createFollowingFixture();
-    fixture = createFixture({
+    fixture = createWallFixture({
       messageRepository: messagingFixture.messageRepository,
       followeeRepository: followingFixture.followeeRepository
     });
@@ -69,31 +66,3 @@ describe('Feature: Viewing a wall', () => {
   });
 });
 
-const  createFixture = ({
-  messageRepository,
-  followeeRepository
-}: {
-  messageRepository: MessageRepository,
-  followeeRepository: FolloweeRepository
-}) => {
-  let wall: { author: string, text: string, publicationTime: string}[] = [];
-  const dateProvider = new StubDateProvider()
-  const viewWallUsecase = new ViewWallUsecase(
-    messageRepository,
-    followeeRepository,
-    dateProvider
-  );
-  return {
-    givenNowIs(now: Date) {
-      dateProvider.now = now;
-    },
-    async whenUserSeesTheWallOf(user: string) {
-      wall = await viewWallUsecase.handle({user});
-    },
-    thenUserShouldSee(expectedWall: { author: string, text: string, publicationTime: string}[]) {
-      expect(wall).toEqual(expectedWall);
-    }
-  }
-}
-
-type Fixture = ReturnType<typeof createFixture>;

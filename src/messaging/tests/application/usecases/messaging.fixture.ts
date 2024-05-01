@@ -1,9 +1,9 @@
-import {StubDateProvider} from "../infrastructure/stub-date-provider";
-import {InMemoryMessageRepository} from "../infrastructure/persistance/memory/message-inmemory.repository";
-import {PostMessageCommand, PostMessageUsecase} from "../application/usecases/post-message.usecase";
-import {ViewTimelineUsecase} from "../application/usecases/view-timeline.usecase";
-import {EditMessageCommand, EditMessageUsecase} from "../application/usecases/edit-message.usecase";
-import {MessageEntity} from "../domain/entities/message.entity";
+import {StubDateProvider} from "../../../infrastructure/stub-date-provider";
+import {InMemoryMessageRepository} from "../../../infrastructure/persistance/memory/message-inmemory.repository";
+import {PostMessageCommand, PostMessageUsecase} from "../../../application/usecases/post-message.usecase";
+import {ViewTimelineUsecase} from "../../../application/usecases/view-timeline.usecase";
+import {EditMessageCommand, EditMessageUsecase} from "../../../application/usecases/edit-message.usecase";
+import {MessageEntity} from "../../../domain/entities/message.entity";
 
 export const createMessagingFixture = () => {
   let timeline: {

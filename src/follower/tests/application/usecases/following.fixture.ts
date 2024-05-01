@@ -1,6 +1,6 @@
-import {FolloweeEntity} from "../domain/entities/followee.entity";
-import {FolloweeMemoryRepositoryAdapter} from "../infrastructure/persistance/memory/followee-memory-repository.adapter";
-import {FollowUserCommand, FollowUserUsecase} from "../application/usecases/follow-user.usecase";
+import {FolloweeEntity} from "../../../domain/entities/followee.entity";
+import {FolloweeMemoryRepositoryAdapter} from "../../../infrastructure/persistance/memory/followee-memory-repository.adapter";
+import {FollowUserCommand, FollowUserUsecase} from "../../../application/usecases/follow-user.usecase";
 
 
 export const createFollowingFixture = () => {

@@ -1,6 +1,6 @@
 import {createMessagingFixture, MessagingFixture} from "./messaging.fixture";
-import {messageBuilder} from "./message.builder";
-import {EmptyMessageError, MessageTooLongError} from "../domain/entities/message.entity";
+import {messageBuilder} from "../../message.builder";
+import {EmptyMessageError, MessageTooLongError} from "../../../domain/entities/message.entity";
 
 describe('Feature Posting a message', () => {
   let fixture: MessagingFixture;
