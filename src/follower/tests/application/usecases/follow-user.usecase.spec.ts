@@ -15,7 +15,7 @@ describe('Feature: Following a user', () => {
 
     await fixture.whenUserFollows({
       user: 'Alice',
-      userTofollow: 'Bob',
+      userToFollow: 'Bob',
     });
 
     await fixture.thenUserFollowsAre({

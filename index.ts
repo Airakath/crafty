@@ -5,14 +5,21 @@ import {FileSystemMessageRepository} from "./src/messaging/infrastructure/persis
 import {ViewTimelineUsecase} from "./src/messaging/application/usecases/view-timeline.usecase";
 import {EditMessageCommand, EditMessageUsecase} from "./src/messaging/application/usecases/edit-message.usecase";
 import {RealDateProvider} from "./src/messaging/infrastructure/real-date-provider";
+import { FollowUserCommand, FollowUserUsecase } from './src/follower/application/usecases/follow-user.usecase';
+import {
+  FolloweeFileSystemRepositoryAdapter
+} from './src/follower/infrastructure/persistance/file/followee-file-system-repository.adapter';
+import { ViewWallUsecase } from './src/follower/application/usecases/view-wall.usecase';
 
 
 const messageRepository = new FileSystemMessageRepository();
+const followeeRepository = new FolloweeFileSystemRepositoryAdapter();
 const dateProvider = new RealDateProvider();
 const postMessageUsecase = new PostMessageUsecase(messageRepository, dateProvider);
 const editMessageUsecase = new EditMessageUsecase(messageRepository);
-
+const followUserUsecase = new FollowUserUsecase(followeeRepository);
 const viewTimelineUsecase = new ViewTimelineUsecase(messageRepository, dateProvider);
+const viewWallUsecase = new ViewWallUsecase(messageRepository, followeeRepository, dateProvider);
 
 const program = new Command();
 
@@ -53,6 +60,22 @@ program
       }
     })
   )
+  .addCommand(new Command('follow')
+    .argument('<user>','the current user')
+    .argument('<user-to-follow>','the user to follow')
+    .action(async (user, userToFollow) => {
+      const followUserCommand: FollowUserCommand = {
+        user,
+        userToFollow,
+      }
+      try {
+        await followUserUsecase.handle(followUserCommand);
+        console.log(`${user} is now following ${userToFollow}`);
+      } catch (err) {
+        console.error(err);
+      }
+    })
+  )
   .addCommand(
     new Command('view')
       .argument("<user>", "the user to view the timeline of")
@@ -66,7 +89,21 @@ program
           process.exit(1);
         }
       })
-  );
+  ).addCommand(
+  new Command('wall')
+    .argument("<user>", "the user to view the wall of")
+    .action(async (user) => {
+      try {
+        const timeline = await viewWallUsecase.handle({ user });
+        console.table(timeline);
+        process.exit(0);
+      } catch (err) {
+        console.error(err);
+        process.exit(1);
+      }
+    })
+);
+
 
 
 async function main() {

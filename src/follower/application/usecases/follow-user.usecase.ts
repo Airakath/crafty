@@ -3,7 +3,7 @@ import {FolloweeEntity} from "../../domain/entities/followee.entity";
 
 export type FollowUserCommand = {
   user: string;
-  userTofollow: string;
+  userToFollow: string;
 };
 
 export class FollowUserUsecase {
@@ -14,7 +14,7 @@ export class FollowUserUsecase {
   async handle(followUserCommand: FollowUserCommand) {
     return this.followeeRepository.saveFollowee(FolloweeEntity.fromData({
       user: followUserCommand.user,
-      followee: followUserCommand.userTofollow
+      followee: followUserCommand.userToFollow
     }));
   }
 }
