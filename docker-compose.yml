@@ -1,0 +1,12 @@
+services:
+  postgresql:
+    restart: always
+    image: postgres:16
+    container_name: postgresql
+    hostname: postgresql.local
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=crafty
+      - POSTGRES_USER=johndoe
+      - POSTGRES_PASSWORD=randompassword

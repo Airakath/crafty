@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import {PostMessageCommand, PostMessageUsecase} from "./src/messaging/application/usecases/post-message.usecase";
 import {Command} from "commander";
-import {FileSystemMessageRepository} from "./src/messaging/infrastructure/persistance/file/message-fs.repository";
+import {FileSystemMessageRepositoryAdapter} from "./src/messaging/infrastructure/persistance/file/./message-fs.repository.adapter";
 import {ViewTimelineUsecase} from "./src/messaging/application/usecases/view-timeline.usecase";
 import {EditMessageCommand, EditMessageUsecase} from "./src/messaging/application/usecases/edit-message.usecase";
 import {RealDateProvider} from "./src/messaging/infrastructure/real-date-provider";
@@ -12,7 +12,7 @@ import {
 import { ViewWallUsecase } from './src/follower/application/usecases/view-wall.usecase';
 
 
-const messageRepository = new FileSystemMessageRepository();
+const messageRepository = new FileSystemMessageRepositoryAdapter();
 const followeeRepository = new FolloweeFileSystemRepositoryAdapter();
 const dateProvider = new RealDateProvider();
 const postMessageUsecase = new PostMessageUsecase(messageRepository, dateProvider);

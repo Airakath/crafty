@@ -2,8 +2,11 @@ import * as path from "node:path";
 import * as fs from "node:fs";
 import {MessageRepository} from "../../../domain/ports/output/message.repository";
 import {MessageEntity} from "../../../domain/entities/message.entity";
+import {
+  FolloweeFileSystemRepositoryAdapter
+} from '../../../../follower/infrastructure/persistance/file/followee-file-system-repository.adapter';
 
-export class FileSystemMessageRepository implements MessageRepository {
+export class FileSystemMessageRepositoryAdapter implements MessageRepository {
 
   constructor(private readonly messagePath = path.join(__dirname, 'messages.json')) {}
 

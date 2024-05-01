@@ -1,7 +1,7 @@
 import * as path from "node:path";
 import * as fs from "node:fs";
 
-import {FileSystemMessageRepository} from "../../infrastructure/persistance/file/message-fs.repository";
+import {FileSystemMessageRepositoryAdapter} from "../../infrastructure/persistance/file/./message-fs.repository.adapter";
 import {messageBuilder} from "../message.builder";
 
 const testMessagesPath = path.join(__dirname, 'messages-test.json')
@@ -13,7 +13,7 @@ describe('FileSystemMessageRepository', () => {
   });
 
   test("save() can save a message in the filesystem", async () => {
-    const messageRepository = new FileSystemMessageRepository(testMessagesPath);
+    const messageRepository = new FileSystemMessageRepositoryAdapter(testMessagesPath);
 
     const messageAlice = messageBuilder()
       .withId('message-id')
@@ -37,7 +37,7 @@ describe('FileSystemMessageRepository', () => {
   });
 
   test("save() can update an existing message in the filesystem", async () => {
-    const messageRepository = new FileSystemMessageRepository(testMessagesPath);
+    const messageRepository = new FileSystemMessageRepositoryAdapter(testMessagesPath);
 
     await fs.promises.writeFile(testMessagesPath, JSON.stringify([
       {
@@ -70,7 +70,7 @@ describe('FileSystemMessageRepository', () => {
   });
 
   test("getById() returns a message by its id", async () => {
-    const messageRepository = new FileSystemMessageRepository(testMessagesPath);
+    const messageRepository = new FileSystemMessageRepositoryAdapter(testMessagesPath);
     await fs.promises.writeFile(testMessagesPath, JSON.stringify([
       {
         id: 'message-id',
@@ -97,7 +97,7 @@ describe('FileSystemMessageRepository', () => {
   });
 
   test("getAllOfUser() returns all the messages of specific user", async () => {
-    const messageRepository = new FileSystemMessageRepository(testMessagesPath);
+    const messageRepository = new FileSystemMessageRepositoryAdapter(testMessagesPath);
     await fs.promises.writeFile(testMessagesPath, JSON.stringify([
       {
         id: 'message-id',
