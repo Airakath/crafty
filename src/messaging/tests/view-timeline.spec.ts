@@ -45,17 +45,17 @@ describe("Feature: Viewing a personal timeline", () => {
         {
           author: "Alice",
           text: "My last message",
-          publishedTime: "less than a minute ago",
+          publicationTime: "less than a minute ago",
         },
         {
           author: "Alice",
           text: "My second message",
-          publishedTime: "1 minute ago",
+          publicationTime: "1 minute ago",
         },
         {
           author: "Alice",
           text: "My first message",
-          publishedTime: "7 minutes ago",
+          publicationTime: "7 minutes ago",
         },
       ]);
 

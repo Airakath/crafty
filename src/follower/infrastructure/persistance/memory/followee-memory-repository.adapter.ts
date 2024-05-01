@@ -10,9 +10,6 @@ export class FolloweeMemoryRepositoryAdapter implements FolloweeRepository {
 
     return Promise.resolve();
   }
-  getFollowByUser(user: string): Promise<FolloweeEntity> {
-    throw new Error("Method not implemented.");
-  }
 
   givenExistingFollowees(followees: FolloweeEntity[]) {
     followees.forEach((followee) => this.addFollowee(followee));
@@ -24,7 +21,7 @@ export class FolloweeMemoryRepositoryAdapter implements FolloweeRepository {
     this.followeesByUser.set(followee.user, existingFollowees);
   }
 
-  getFolloweesOf(user: string): string[] {
-    return this.followeesByUser.get(user) ?? [];
+  async getFolloweesOf(user: string): Promise<string[]> {
+    return Promise.resolve(this.followeesByUser.get(user) ?? []);
   }
 }

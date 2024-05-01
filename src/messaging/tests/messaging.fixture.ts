@@ -9,7 +9,7 @@ export const createMessagingFixture = () => {
   let timeline: {
     author: string,
     text: string,
-    publishedTime: string
+    publicationTime: string
   }[];
   const dateProvider = new StubDateProvider();
   const messageRepository = new InMemoryMessageRepository();
@@ -50,7 +50,7 @@ export const createMessagingFixture = () => {
     thenErrorShouldBe(expectedErrorClass: new () => Error) {
       expect(throwError).toBeInstanceOf(expectedErrorClass);
     },
-    thenUserShouldSee(expectedTimeline: {author: string, text: string, publishedTime: string}[]) {
+    thenUserShouldSee(expectedTimeline: {author: string, text: string, publicationTime: string}[]) {
       expect(timeline).toEqual(expectedTimeline);
     },
     messageRepository,

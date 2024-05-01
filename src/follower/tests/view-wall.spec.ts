@@ -26,19 +26,22 @@ describe('Feature: Viewing a wall', () => {
 
       messagingFixture.givenTheFollowingMessagesExist([
         messageBuilder()
+          .withId('m1')
           .authoredBy('Alice')
           .withText('I love the weather today')
-          .publishedAt(new Date('2023-02-09T15:00:30.00Z'))
+          .publishedAt(new Date('2023-02-09T15:00:30Z'))
           .build(),
         messageBuilder()
+          .withId('m2')
           .authoredBy('Bob')
           .withText('Damn! We lost!')
-          .publishedAt(new Date('2023-02-09T15:10:00.00Z'))
+          .publishedAt(new Date('2023-02-09T15:10:00Z'))
           .build(),
         messageBuilder()
+          .withId('m3')
           .authoredBy('Charlie')
           .withText("I'm in New York today! Anyone wants to have a coffee?")
-          .publishedAt(new Date('2023-02-09T15:15:00.00Z'))
+          .publishedAt(new Date('2023-02-09T15:15:00Z'))
           .build()
       ]);
 
