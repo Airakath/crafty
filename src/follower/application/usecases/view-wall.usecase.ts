@@ -21,8 +21,6 @@ export class ViewWallUsecase {
       )
     )).flat();
 
-    console.log(this.dateProvider);
-
     const timeline = new TimelineEntity(messages, this.dateProvider.getNow());
 
     return timeline.data;
