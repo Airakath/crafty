@@ -13,7 +13,10 @@ export class MessagePrismaRepositoryAdapter implements MessageRepository {
     await this.prisma.user.upsert({
       where: { name: messageData.author },
       update: { name: messageData.author },
-      create: { name: messageData.author },
+      create: {
+        name: messageData.author,
+        userId: messageData.id
+      },
     });
 
     await this.prisma.message.upsert({
