@@ -53,11 +53,18 @@ program
         text: message,
       };
       try {
-        await postMessageUsecase.handle(postMessageCommand);
-        console.log('MessageEntity posted');
-        //console.table([messageRepository.message]);
+        const result = await postMessageUsecase.handle(postMessageCommand);
+        if (result.isOk()) {
+          console.log('MessageEntity posted');
+          process.exit(0);
+        }
+
+        console.error(result.error);
+        process.exit(1);
+
       } catch (err) {
         console.error(err);
+        process.exit(1);
       }
     }),
   )
@@ -70,10 +77,18 @@ program
         text: message,
       };
       try {
-        await editMessageUsecase.handle(editMessageCommand);
-        console.log('MessageEntity edited');
+        const result = await editMessageUsecase.handle(editMessageCommand);
+        if (result.isOk()) {
+          console.log('MessageEntity edited');
+          process.exit(0);
+        }
+
+        console.error(result.error);
+        process.exit(1);
+
       } catch (err) {
         console.error(err);
+        process.exit(1);
       }
     }),
   )

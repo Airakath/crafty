@@ -46,7 +46,6 @@ app.use(express.urlencoded({extended: true})); 	// for parsing application/x-www
 app.use(express.json()); 							// for parsing application/json
 app.use(morgan(FORMAT_LOGS));
 
-
 app.post('/post', async (req: Request<{user: string, message: string }>, res: Response) => {
   const postMessageCommand: PostMessageCommand = {
     id: `${Math.floor(Math.random() * 10000)}`,
@@ -55,13 +54,16 @@ app.post('/post', async (req: Request<{user: string, message: string }>, res: Re
   };
 
   try {
-    await postMessageUsecase.handle(postMessageCommand);
-    return res.status(201).send();
+    const result = await postMessageUsecase.handle(postMessageCommand);
+    if (result.isOk()) {
+      return res.status(201).send();
+    }
+    return res.status(400).send(result.error);
+
   } catch (err) {
-    return res.status(400).send(err);
+    return res.status(500).send(err);
   }
 });
-
 
 app.post('/edit',async (req: Request<{messageId: string; message: string }>, res: Response) => {
   const editMessageCommand: EditMessageCommand = {
@@ -69,10 +71,14 @@ app.post('/edit',async (req: Request<{messageId: string; message: string }>, res
     text: req.body.message,
   };
   try {
-    await editMessageUsecase.handle(editMessageCommand);
-    return res.status(200).send();
+    const result = await editMessageUsecase.handle(editMessageCommand);
+    if (result.isOk()) {
+      return res.status(200).send();
+    }
+    return res.status(400).send(result.error);
+
   } catch (err) {
-    return res.status(400).send(err);
+    return res.status(500).send(err);
   }
 });
 
