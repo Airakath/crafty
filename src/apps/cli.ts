@@ -1,19 +1,22 @@
 #!/usr/bin/env node
-import {PostMessageCommand, PostMessageUsecase} from "./src/messaging/application/usecases/post-message.usecase";
-import {Command} from "commander";
-import {FileSystemMessageRepositoryAdapter} from "./src/messaging/infrastructure/persistance/file/./message-fs.repository.adapter";
-import {ViewTimelineUsecase} from "./src/messaging/application/usecases/view-timeline.usecase";
-import {EditMessageCommand, EditMessageUsecase} from "./src/messaging/application/usecases/edit-message.usecase";
-import {RealDateProvider} from "./src/messaging/infrastructure/real-date-provider";
-import { FollowUserCommand, FollowUserUsecase } from './src/follower/application/usecases/follow-user.usecase';
+import { PostMessageCommand, PostMessageUsecase } from '../messaging/application/usecases/post-message.usecase';
+import { Command } from 'commander';
+import { ViewTimelineUsecase } from '../messaging/application/usecases/view-timeline.usecase';
+import { EditMessageCommand, EditMessageUsecase } from '../messaging/application/usecases/edit-message.usecase';
+import { RealDateProvider } from '../messaging/infrastructure/real-date-provider';
+import { FollowUserCommand, FollowUserUsecase } from '../follower/application/usecases/follow-user.usecase';
+import { ViewWallUsecase } from '../follower/application/usecases/view-wall.usecase';
+import { PrismaClient } from '@prisma/client';
 import {
-  FolloweeFileSystemRepositoryAdapter
-} from './src/follower/infrastructure/persistance/file/followee-file-system-repository.adapter';
-import { ViewWallUsecase } from './src/follower/application/usecases/view-wall.usecase';
+  MessagePrismaRepositoryAdapter
+} from '../messaging/infrastructure/persistance/db/message-prisma.repository.adapter';
+import {
+  FolloweePrismaRepositoryAdapter
+} from '../follower/infrastructure/persistance/db/followee-prisma-repository.adapter';
 
-
-const messageRepository = new FileSystemMessageRepositoryAdapter();
-const followeeRepository = new FolloweeFileSystemRepositoryAdapter();
+const prismaClient = new PrismaClient();
+const messageRepository = new MessagePrismaRepositoryAdapter(prismaClient);
+const followeeRepository = new FolloweePrismaRepositoryAdapter(prismaClient);
 const dateProvider = new RealDateProvider();
 const postMessageUsecase = new PostMessageUsecase(messageRepository, dateProvider);
 const editMessageUsecase = new EditMessageUsecase(messageRepository);
@@ -28,86 +31,87 @@ program
   .description('Crafty social network')
   .addCommand(new Command('post')
     .argument('<user>', 'the current user')
-    .argument('<message>','the message to post')
+    .argument('<message>', 'the message to post')
     .action(async (user, message) => {
       const postMessageCommand: PostMessageCommand = {
         id: `${Math.floor(Math.random() * 10000)}`,
         author: user,
         text: message,
-      }
+      };
       try {
         await postMessageUsecase.handle(postMessageCommand);
-        console.log("MessageEntity posted");
+        console.log('MessageEntity posted');
         //console.table([messageRepository.message]);
       } catch (err) {
         console.error(err);
       }
-    })
+    }),
   )
   .addCommand(new Command('edit')
-    .argument('<message-id>','the message id of the message to edit')
-    .argument('<message>','the new text')
+    .argument('<message-id>', 'the message id of the message to edit')
+    .argument('<message>', 'the new text')
     .action(async (messageId, message) => {
       const editMessageCommand: EditMessageCommand = {
         messageId,
         text: message,
-      }
+      };
       try {
         await editMessageUsecase.handle(editMessageCommand);
-        console.log("MessageEntity edited");
+        console.log('MessageEntity edited');
       } catch (err) {
         console.error(err);
       }
-    })
+    }),
   )
   .addCommand(new Command('follow')
-    .argument('<user>','the current user')
-    .argument('<user-to-follow>','the user to follow')
+    .argument('<user>', 'the current user')
+    .argument('<user-to-follow>', 'the user to follow')
     .action(async (user, userToFollow) => {
       const followUserCommand: FollowUserCommand = {
         user,
         userToFollow,
-      }
+      };
       try {
         await followUserUsecase.handle(followUserCommand);
         console.log(`${user} is now following ${userToFollow}`);
       } catch (err) {
         console.error(err);
       }
-    })
+    }),
   )
   .addCommand(
     new Command('view')
-      .argument("<user>", "the user to view the timeline of")
+      .argument('<user>', 'the user to view the timeline of')
       .action(async (user) => {
         try {
-          const timeline = await viewTimelineUsecase.handle({ user });
+          const timeline = await viewTimelineUsecase.handle({user});
           console.table(timeline);
           process.exit(0);
         } catch (err) {
           console.error(err);
           process.exit(1);
         }
-      })
+      }),
   ).addCommand(
   new Command('wall')
-    .argument("<user>", "the user to view the wall of")
+    .argument('<user>', 'the user to view the wall of')
     .action(async (user) => {
       try {
-        const timeline = await viewWallUsecase.handle({ user });
+        const timeline = await viewWallUsecase.handle({user});
         console.table(timeline);
         process.exit(0);
       } catch (err) {
         console.error(err);
         process.exit(1);
       }
-    })
+    }),
 );
 
 
-
 async function main() {
+  await prismaClient.$connect();
   await program.parseAsync();
+  await prismaClient.$disconnect();
 }
 
 main();
