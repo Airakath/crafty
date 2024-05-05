@@ -13,7 +13,8 @@ import {
 import { EditMessageCommand, EditMessageUsecase } from '../messaging/application/usecases/edit-message.usecase';
 import express, { Request, Response } from 'express';
 import morgan from 'morgan';
-
+import { TimelinePresenter } from '../follower/application/presenters/timeline.presenter';
+import { TimelineEntity } from '../messaging/domain/entities/timeline.entity';
 
 const prismaClient = new PrismaClient();
 const messageRepository = new MessagePrismaRepositoryAdapter(prismaClient);
@@ -22,8 +23,18 @@ const dateProvider = new RealDateProvider();
 const postMessageUsecase = new PostMessageUsecase(messageRepository, dateProvider);
 const editMessageUsecase = new EditMessageUsecase(messageRepository);
 const followUserUsecase = new FollowUserUsecase(followeeRepository);
-const viewTimelineUsecase = new ViewTimelineUsecase(messageRepository, dateProvider);
-const viewWallUsecase = new ViewWallUsecase(messageRepository, followeeRepository, dateProvider);
+const viewTimelineUsecase = new ViewTimelineUsecase(messageRepository);
+const viewWallUsecase = new ViewWallUsecase(messageRepository, followeeRepository);
+
+class ApiTimelinePresenter implements TimelinePresenter {
+  constructor(
+    private readonly response: express.Response
+  ) {}
+
+  show(timeline: TimelineEntity): void {
+    this.response.status(200).json(timeline.data);
+  }
+}
 
 const PORT = 3000;
 const NODE_ENV = 'development';
@@ -79,18 +90,18 @@ app.post('/follow', async (req: Request<{ user: string; followee: string }>, res
 });
 
 app.get('/view/:user', async (req: Request<{ user: string }>, res: Response) => {
+  const timelinePresenter = new ApiTimelinePresenter(res);
   try {
-    const timeline = await viewTimelineUsecase.handle({ user: req.params.user });
-    return res.status(200).send(timeline);
+    return await viewTimelineUsecase.handle({ user: req.params.user }, timelinePresenter);
   } catch (err) {
     return res.status(400).send(err);
   }
 });
 
 app.get('/wall/:user', async (req: Request<{ user: string }>, res: Response) => {
+  const timelinePresenter = new ApiTimelinePresenter(res);
   try {
-    const wall = await viewWallUsecase.handle({ user: req.params.user });
-    return res.status(200).send(wall);
+    return await viewWallUsecase.handle({ user: req.params.user }, timelinePresenter);
   } catch (err) {
     return res.status(400).send(err);
   }
@@ -100,7 +111,7 @@ async function main() {
   try {
     await prismaClient.$connect();
 
-    await app.listen(PORT, () => {
+    app.listen(PORT, () => {
       console.info(`⚡ listening on port ${PORT} in ${NODE_ENV} mode ⚡`);
     }).on('close', async () => {
       await prismaClient.$disconnect();

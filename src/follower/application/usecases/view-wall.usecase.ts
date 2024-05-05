@@ -2,6 +2,7 @@ import { MessageRepository } from '../../../messaging/domain/ports/output/messag
 import { FolloweeRepository } from '../../domain/ports/output/followeeRepository';
 import { DateProvider } from '../../../messaging/application/date-provider';
 import { TimelineEntity } from '../../../messaging/domain/entities/timeline.entity';
+import { TimelinePresenter } from '../presenters/timeline.presenter';
 
 
 export class ViewWallUsecase {
@@ -9,10 +10,9 @@ export class ViewWallUsecase {
   constructor(
     private readonly messageRepository: MessageRepository,
     private readonly followRepository: FolloweeRepository,
-    private readonly dateProvider: DateProvider,
   ) {}
 
-  async handle({user}: { user: string }): Promise<{ author: string, text: string, publicationTime: string }[]> {
+  async handle({user}: { user: string }, timelinePresenter: TimelinePresenter): Promise<void> {
 
     const followees = await this.followRepository.getFolloweesOf(user);
     const messages = (await Promise.all(
@@ -21,8 +21,8 @@ export class ViewWallUsecase {
       )
     )).flat();
 
-    const timeline = new TimelineEntity(messages, this.dateProvider.getNow());
+    const timeline = new TimelineEntity(messages);
 
-    return timeline.data;
+    timelinePresenter.show(timeline);
   }
 }

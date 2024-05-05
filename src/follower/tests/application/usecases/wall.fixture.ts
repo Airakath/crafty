@@ -2,6 +2,8 @@ import { MessageRepository } from '../../../../messaging/domain/ports/output/mes
 import { FolloweeRepository } from '../../../domain/ports/output/followeeRepository';
 import { StubDateProvider } from '../../../../messaging/infrastructure/stub-date-provider';
 import { ViewWallUsecase } from '../../../application/usecases/view-wall.usecase';
+import { DefaultTimelinePresenter } from '../../../application/presenters/timeline.default.presenter';
+import { TimelinePresenter } from '../../../application/presenters/timeline.presenter';
 
 export const createWallFixture = ({
   messageRepository,
@@ -15,14 +17,20 @@ export const createWallFixture = ({
   const viewWallUsecase = new ViewWallUsecase(
     messageRepository,
     followeeRepository,
-    dateProvider
   );
+  const defaultWallPresenter = new DefaultTimelinePresenter(dateProvider);
+  const  wallPresenter: TimelinePresenter = {
+    show(theWall) {
+      wall = defaultWallPresenter.show(theWall);
+    }
+  }
+
   return {
     givenNowIs(now: Date) {
       dateProvider.now = now;
     },
     async whenUserSeesTheWallOf(user: string) {
-      wall = await viewWallUsecase.handle({user});
+      await viewWallUsecase.handle({user}, wallPresenter);
     },
     thenUserShouldSee(expectedWall: { author: string, text: string, publicationTime: string}[]) {
       expect(wall).toEqual(expectedWall);

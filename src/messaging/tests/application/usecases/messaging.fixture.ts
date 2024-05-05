@@ -4,6 +4,8 @@ import {PostMessageCommand, PostMessageUsecase} from "../../../application/useca
 import {ViewTimelineUsecase} from "../../../application/usecases/view-timeline.usecase";
 import {EditMessageCommand, EditMessageUsecase} from "../../../application/usecases/edit-message.usecase";
 import {MessageEntity} from "../../../domain/entities/message.entity";
+import { DefaultTimelinePresenter } from '../../../../follower/application/presenters/timeline.default.presenter';
+import { TimelinePresenter } from '../../../../follower/application/presenters/timeline.presenter';
 
 export const createMessagingFixture = () => {
   let timeline: {
@@ -15,7 +17,13 @@ export const createMessagingFixture = () => {
   const messageRepository = new InMemoryMessageRepository();
   const postMessageUsecase = new PostMessageUsecase(messageRepository, dateProvider);
   const editMessageUsecase = new EditMessageUsecase(messageRepository);
-  const viewTimelineUseCase = new ViewTimelineUsecase(messageRepository, dateProvider);
+  const viewTimelineUseCase = new ViewTimelineUsecase(messageRepository);
+  const defaultTimelinePresenter = new DefaultTimelinePresenter(dateProvider);
+  const  timelinePresenter: TimelinePresenter = {
+    show(theTimeline) {
+      timeline = defaultTimelinePresenter.show(theTimeline);
+    }
+  }
 
   let throwError: Error;
 
@@ -41,7 +49,7 @@ export const createMessagingFixture = () => {
       }
     },
     async whenUserSeesTheTimelineOf(user: string) {
-      timeline = await viewTimelineUseCase.handle({ user });
+     await viewTimelineUseCase.handle({ user }, timelinePresenter);
     },
     async thenMessageShouldBe(expectedMessage: MessageEntity) {
       const message = await messageRepository.getById(expectedMessage.id);
