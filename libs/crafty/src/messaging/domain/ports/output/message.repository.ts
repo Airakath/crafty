@@ -5,3 +5,5 @@ export interface MessageRepository {
   getAllOfUser(user: string): Promise<MessageEntity[]>;
   getById(messageId: string): Promise<MessageEntity>;
 }
+
+export const IMessageRepository = Symbol('MessageRepository');

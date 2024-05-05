@@ -1,5 +1,5 @@
 import { MessageRepository } from '../../../messaging/domain/ports/output/message.repository';
-import { FolloweeRepository } from '../../domain/ports/output/followeeRepository';
+import { FolloweeRepository } from '../../domain/ports/output/followee.repository';
 import { DateProvider } from '../../../messaging/application/date-provider';
 import { TimelineEntity } from '../../../messaging/domain/entities/timeline.entity';
 import { TimelinePresenter } from '../presenters/timeline.presenter';

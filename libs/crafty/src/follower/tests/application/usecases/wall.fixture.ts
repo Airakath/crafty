@@ -1,5 +1,5 @@
 import { MessageRepository } from '../../../../messaging/domain/ports/output/message.repository';
-import { FolloweeRepository } from '../../../domain/ports/output/followeeRepository';
+import { FolloweeRepository } from '../../../domain/ports/output/followee.repository';
 import { StubDateProvider } from '../../../../messaging/infrastructure/stub-date-provider';
 import { ViewWallUsecase } from '../../../application/usecases/view-wall.usecase';
 import { DefaultTimelinePresenter } from '../../../application/presenters/timeline.default.presenter';

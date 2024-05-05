@@ -1,4 +1,4 @@
-import {FolloweeRepository} from "../../../domain/ports/output/followeeRepository";
+import {FolloweeRepository} from "../../../domain/ports/output/followee.repository";
 import * as path from "node:path";
 import * as fs from 'node:fs';
 import { FolloweeEntity } from '../../../domain/entities/followee.entity';

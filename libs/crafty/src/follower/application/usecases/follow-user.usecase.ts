@@ -1,4 +1,4 @@
-import { FolloweeRepository } from '../../domain/ports/output/followeeRepository';
+import { FolloweeRepository } from '../../domain/ports/output/followee.repository';
 import { FolloweeEntity } from '../../domain/entities/followee.entity';
 
 export type FollowUserCommand = {
