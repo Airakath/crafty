@@ -1,6 +1,8 @@
 import {FolloweeEntity} from "../../entities/followee.entity";
+import { Injectable } from '@nestjs/common';
 
-export interface FolloweeRepository {
-  saveFollowee(followee: FolloweeEntity): Promise<void>;
-  getFolloweesOf(user: string): Promise<string[]>;
+@Injectable()
+export abstract class FolloweeRepository {
+  abstract saveFollowee(followee: FolloweeEntity): Promise<void>;
+  abstract getFolloweesOf(user: string): Promise<string[]>;
 }

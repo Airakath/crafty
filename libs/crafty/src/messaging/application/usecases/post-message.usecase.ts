@@ -1,8 +1,8 @@
-import { IMessageRepository, MessageRepository } from '../../domain/ports/output/message.repository';
+import { MessageRepository } from '../../domain/ports/output/message.repository';
 import { EmptyMessageError, MessageEntity, MessageTooLongError } from '../../domain/entities/message.entity';
-import {DateProvider} from "../date-provider";
+import { DateProvider } from '../date-provider';
 import { Err, Ok, Result } from '../../../shared/result';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 export type PostMessageCommand = {
   id: string;
@@ -13,9 +13,10 @@ export type PostMessageCommand = {
 @Injectable()
 export class PostMessageUsecase {
   constructor(
-    @Inject(IMessageRepository) private readonly messageRepository: MessageRepository,
+    private readonly messageRepository: MessageRepository,
     private readonly dateProvider: DateProvider,
-  ) {}
+  ) {
+  }
 
   async handle(postMessageCommand: PostMessageCommand): Promise<Result<void, EmptyMessageError | MessageTooLongError>> {
     let message: MessageEntity;

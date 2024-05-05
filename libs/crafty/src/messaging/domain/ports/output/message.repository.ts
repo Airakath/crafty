@@ -1,9 +1,10 @@
 import {MessageEntity} from "../../entities/message.entity";
+import { Injectable } from '@nestjs/common';
 
-export interface MessageRepository {
-  save(message: MessageEntity): Promise<void>;
-  getAllOfUser(user: string): Promise<MessageEntity[]>;
-  getById(messageId: string): Promise<MessageEntity>;
+@Injectable()
+export abstract class MessageRepository {
+  abstract save(message: MessageEntity): Promise<void>;
+  abstract getAllOfUser(user: string): Promise<MessageEntity[]>;
+  abstract getById(messageId: string): Promise<MessageEntity>;
 }
 
-export const IMessageRepository = Symbol('MessageRepository');
